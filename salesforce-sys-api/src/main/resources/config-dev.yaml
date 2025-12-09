@@ -1,0 +1,14 @@
+salesforce:
+  client-id: "3MVG9j6uMOMC1DNjf6_hPZd65u5vmUTvuZ7_p8W6EglfGRDjKtHRk0Dq_AdaUmSlF38946SWKBosprsnLXnai"
+  principal: "ymenager@phidimensions.com.asishdev"
+  alias: "mulesoft"
+  store-password: "secret"
+  token-endpoint: "https://signaturehealthcare--asishdev.sandbox.my.salesforce.com/services/oauth2/token"
+  audience: "https://signaturehealthcare--asishdev.sandbox.my.salesforce.com"
+  
+  
+salesforce-oauth:
+  client-id: "3MVG9j6uMOMC1DNjf6_hPZd65u0XvSsInURrL558zyDHJOD1dRPd_..xG56RzzHtsMujj3_zD4PXmfcWS4fR0"
+  client-secret: "BB57A4079BEA420AAE160CD6323C06E2D085520A35A09443A746EAE915559024"
+  token: "xuiqDvOaFiEECZmMY4pY3Vc7"
+  password: "Signature#123"

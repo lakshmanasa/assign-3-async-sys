@@ -1,0 +1,11 @@
+%dw 2.0
+
+type auto_ca2c932e_0575_4f44_bcff_0286f6bfc52c_Output_Variables_contentVersion = Array<{ _?: java_lang_Object {"class": "java.lang.Object",
+  "typeAlias": "Object",
+  "typeId": "java.lang.Object"} }>
+type java_lang_Object = {|  |} {"class": "java.lang.Object",
+"typeAlias": "Object",
+"typeId": "java.lang.Object"}
+
+
+

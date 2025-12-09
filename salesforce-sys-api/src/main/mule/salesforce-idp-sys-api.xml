@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="cfe281bc-9d85-4098-979f-8f086d98e0e9" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="salesforce-idp-sys-apiFlow" doc:id="1ddda5bc-04d5-440b-aae4-97faf7583da3" >
+		<http:listener doc:name="Listener" doc:id="de6e347b-7a4b-4b78-a33f-74fcbca444bb" config-ref="HTTP_Listener_config" path="/test"/>
+		<flow-ref doc:name="Flow Reference" doc:id="aa74c894-f77c-435a-aff0-7d62d9cf6e7f" name="sf-salesforce-idp-query-call"/>
+	</flow>
+	<sub-flow name="sf-salesforce-idp-query-call" doc:id="ca2c932e-0575-4f44-bcff-0286f6bfc52c" >
+		<salesforce:query doc:name="Step 1: Get linked ContentDocumentId" doc:id="4ec63b9b-8683-4ef7-b765-a48a907628d0" config-ref="Salesforce_Config" target="contentDocumentLink">
+			<salesforce:salesforce-query ><![CDATA[#[payload]]]></salesforce:salesforce-query>
+		</salesforce:query>
+		<salesforce:query doc:name="Step 2: Get unprocessed ContentVersion records" doc:id="adefb49a-2ac2-42ac-a604-2458d855cd22" config-ref="Salesforce_Config" target="contentVersionId">
+			<salesforce:salesforce-query ><![CDATA[SELECT Id, ContentDocumentId, Processed_By_IDP__c FROM ContentVersion WHERE Processed_By_IDP__c = false AND ContentDocumentId = ':docId']]></salesforce:salesforce-query>
+			<salesforce:parameters ><![CDATA[#[{"docId": vars.contentDocumentLink[0].ContentDocumentId}]]]></salesforce:parameters>
+		</salesforce:query>
+		<salesforce:query doc:name="Step 3: Retrieve the actual file content" doc:id="19914764-b8a6-4193-be27-bcd935dcae90" config-ref="Salesforce_Config" target="contentVersion">
+			<salesforce:salesforce-query ><![CDATA[SELECT Id, Title, VersionData, FileExtension FROM ContentVersion WHERE Id = ':id']]></salesforce:salesforce-query>
+			<salesforce:parameters ><![CDATA[#[{id: vars.contentVersionId[0].Id}]]]></salesforce:parameters>
+		</salesforce:query>
+		<ee:transform doc:name="Payload of VersionData" doc:id="307ca78b-27bb-43bc-82e8-f1201aa8c7d7" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+vars.contentVersion[0].VersionData]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
+	<sub-flow name="sf-salesforce-idp-update-call" doc:id="dbd40bb8-f22b-4d66-905b-c6a1b84d83c2" >
+		<salesforce:update doc:name="Updating the Records to Revenue Management" doc:id="5144c8f5-7768-4906-a492-98d33726e832" config-ref="Salesforce_Config" type="Revenue_Management__c"/>
+		<ee:transform doc:name="Transform Message  Payload" doc:id="7b614ca7-0782-4f52-a5e5-19533675ed38" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
+</mule>

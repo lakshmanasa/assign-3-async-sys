@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+	<salesforce:sfdc-config name="Salesforce_Config_JWT" doc:name="Salesforce Config" doc:id="480ac383-79fb-4b9e-aefe-56add0f2468b" >
+		<salesforce:jwt-connection consumerKey="${salesforce.client-id}" keyStore="mulesoft.jks" storePassword="${salesforce.store-password}" certificateAlias="${salesforce.alias}" principal="${salesforce.principal}" tokenEndpoint="${salesforce.token-endpoint}" audienceUrl="${salesforce.audience}" />
+	</salesforce:sfdc-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="ab4a52dd-3506-4b28-a24d-f2966e3469ae" file="config-dev.yaml" />
+	<salesforce:sfdc-config name="Salesforce_Config_OAuth" doc:name="Salesforce Config" doc:id="8603d689-d97b-4039-94f7-888e94d9ee31" >
+		<salesforce:oauth-user-pass-connection consumerKey="${salesforce-oauth.client-id}" consumerSecret="${salesforce-oauth.client-secret}" username="salesforceintegrations@signaturehealthcarellc.com.mulesoft.asishdev" password="${salesforce-oauth.password}" securityToken="${salesforce-oauth.token}" tokenEndpoint="https://signaturehealthcare--asishdev.sandbox.my.salesforce.com/services/oauth2/token"/>
+	</salesforce:sfdc-config>
+	<salesforce:sfdc-config name="Salesforce_Config" doc:name="Salesforce Config" doc:id="c51bacb8-af69-4d3d-b1e0-80ce10ee0919" >
+		<salesforce:basic-connection username="salesforceintegrations@signaturehealthcarellc.com.mulesoft.asishdev" password="Signature#123" securityToken="xuiqDvOaFiEECZmMY4pY3Vc7" url="https://test.salesforce.com/services/Soap/u/60.0"/>
+	</salesforce:sfdc-config>
+</mule>
